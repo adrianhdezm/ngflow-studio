@@ -90,7 +90,9 @@ describe('resolveConnection', () => {
   });
 
   it('rejects source to source (strict mode)', () => {
-    expect(resolveConnection(fromSource, { kind: 'handle', nodeId: 'action', handleId: null, handleType: 'source' }, getHandles)).toBeNull();
+    expect(
+      resolveConnection(fromSource, { kind: 'handle', nodeId: 'action', handleId: null, handleType: 'source' }, getHandles)
+    ).toBeNull();
   });
 
   it('rejects self-connections', () => {
@@ -100,7 +102,10 @@ describe('resolveConnection', () => {
   });
 
   it('connects to a node body through its matching handle', () => {
-    expect(resolveConnection(fromSource, { kind: 'node', nodeId: 'other' }, getHandles)).toMatchObject({ target: 'other', targetHandle: 'in' });
+    expect(resolveConnection(fromSource, { kind: 'node', nodeId: 'other' }, getHandles)).toMatchObject({
+      target: 'other',
+      targetHandle: 'in'
+    });
   });
 
   it('does nothing when the node has no matching handle (e.g. a trigger has no input)', () => {

@@ -1,4 +1,12 @@
-import { findCycle, getConnectedEdgeIds, getRunOrder, getUnreachableNodeIds, getUpstreamNodeIds, toGraph, wouldCreateCycle } from './graph-utils';
+import {
+  findCycle,
+  getConnectedEdgeIds,
+  getRunOrder,
+  getUnreachableNodeIds,
+  getUpstreamNodeIds,
+  toGraph,
+  wouldCreateCycle
+} from './graph-utils';
 
 const node = (id: string) => ({ id, position: { x: 0, y: 0 } });
 const edge = (source: string, target: string) => ({ id: `${source}-${target}`, source, target });

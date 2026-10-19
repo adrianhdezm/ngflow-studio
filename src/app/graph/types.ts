@@ -118,9 +118,7 @@ export type IsValidConnection = (connection: Connection) => boolean;
 
 /** Drop target found under the pointer when a connection drag ends. */
 export type ConnectionDropTarget =
-  | { kind: 'handle'; nodeId: string; handleId: string | null; handleType: HandleType }
-  | { kind: 'node'; nodeId: string }
-  | { kind: 'pane' };
+  { kind: 'handle'; nodeId: string; handleId: string | null; handleType: HandleType } | { kind: 'node'; nodeId: string } | { kind: 'pane' };
 
 /** What node wrappers and handles call back into; implemented by the graph component. */
 export interface GraphInternals {

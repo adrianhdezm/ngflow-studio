@@ -156,7 +156,14 @@ export const ACTIONS: ActionDefinition[] = [
     icon: 'slack',
     configFields: [
       { key: 'slackChannel', label: 'Channel', type: 'text', required: true, placeholder: '#general' },
-      { key: 'slackMessage', label: 'Message', type: 'template-textarea', rows: 4, required: true, placeholder: 'Hello from {{Trigger.name}}' }
+      {
+        key: 'slackMessage',
+        label: 'Message',
+        type: 'template-textarea',
+        rows: 4,
+        required: true,
+        placeholder: 'Hello from {{Trigger.name}}'
+      }
     ],
     outputFields: [
       { field: 'ts', description: 'Message timestamp' },

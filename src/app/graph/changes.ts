@@ -1,9 +1,22 @@
 // Pure helpers that apply engine change requests to the app's own arrays (GE-05).
 
-import { Connection, ConnectionDropTarget, ConnectStartEvent, EdgeChange, GraphEdge, GraphNode, HandleBounds, IsValidConnection, NodeChange } from './types';
+import {
+  Connection,
+  ConnectionDropTarget,
+  ConnectStartEvent,
+  EdgeChange,
+  GraphEdge,
+  GraphNode,
+  HandleBounds,
+  IsValidConnection,
+  NodeChange
+} from './types';
 
 /** Applies node changes, returning a new array. Unchanged nodes keep their identity. */
-export function applyNodeChanges<N extends Pick<GraphNode, 'id' | 'position' | 'selected' | 'width' | 'height'>>(changes: NodeChange[], nodes: N[]): N[] {
+export function applyNodeChanges<N extends Pick<GraphNode, 'id' | 'position' | 'selected' | 'width' | 'height'>>(
+  changes: NodeChange[],
+  nodes: N[]
+): N[] {
   if (changes.length === 0) {
     return nodes;
   }

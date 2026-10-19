@@ -89,7 +89,10 @@ export function addConnection(doc: GraphDoc, connection: Connection): GraphDoc {
   if (!isValidWorkflowConnection(doc, connection)) {
     return doc;
   }
-  return { nodes: doc.nodes, edges: [...doc.edges, createEdge(connection.source, connection.target, connection.sourceHandle, connection.targetHandle)] };
+  return {
+    nodes: doc.nodes,
+    edges: [...doc.edges, createEdge(connection.source, connection.target, connection.sourceHandle, connection.targetHandle)]
+  };
 }
 
 /** Patches a node's data. A label change rewrites references to it in other nodes (TPL-05). */
@@ -106,7 +109,10 @@ export function updateNodeData(doc: GraphDoc, id: string, patch: Partial<Workflo
   return { nodes, edges: doc.edges };
 }
 
-export function setStatuses(nodes: WorkflowNode[], statuses: Map<string, NodeStatus> | ((node: WorkflowNode) => NodeStatus)): WorkflowNode[] {
+export function setStatuses(
+  nodes: WorkflowNode[],
+  statuses: Map<string, NodeStatus> | ((node: WorkflowNode) => NodeStatus)
+): WorkflowNode[] {
   return nodes.map((node) => {
     const status = typeof statuses === 'function' ? statuses(node) : (statuses.get(node.id) ?? 'idle');
     return node.data.status === status ? node : { ...node, data: { ...node.data, status } };
@@ -118,11 +124,11 @@ export function normalizeGenerated(doc: Partial<GraphDoc>): GraphDoc {
   const nodes = doc.nodes ?? [];
   const firstTrigger = nodes.find((n) => n.type === 'trigger');
   const dropped = new Set(nodes.filter((n) => n.type === 'trigger' && n !== firstTrigger).map((n) => n.id));
-  const kept = nodes.filter((n) => !dropped.has(n.id) && n.type !== 'add').map((n) => ({ ...n, data: { ...n.data, status: 'idle' as const } }));
+  const kept = nodes
+    .filter((n) => !dropped.has(n.id) && n.type !== 'add')
+    .map((n) => ({ ...n, data: { ...n.data, status: 'idle' as const } }));
   const ids = new Set(kept.map((n) => n.id));
-  const edges = (doc.edges ?? [])
-    .filter((e) => ids.has(e.source) && ids.has(e.target))
-    .map((e) => ({ ...e, type: 'animated' as const }));
+  const edges = (doc.edges ?? []).filter((e) => ids.has(e.source) && ids.has(e.target)).map((e) => ({ ...e, type: 'animated' as const }));
   return { nodes: kept, edges };
 }
 

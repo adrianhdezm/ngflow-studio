@@ -87,7 +87,12 @@ describe('geometry', () => {
     });
 
     it('computes the visible flow rect', () => {
-      expect(getVisibleFlowRect({ x: -100, y: -50, zoom: 2 }, { width: 400, height: 200 })).toEqual({ x: 50, y: 25, width: 200, height: 100 });
+      expect(getVisibleFlowRect({ x: -100, y: -50, zoom: 2 }, { width: 400, height: 200 })).toEqual({
+        x: 50,
+        y: 25,
+        width: 200,
+        height: 100
+      });
     });
   });
 

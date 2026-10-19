@@ -135,7 +135,11 @@ export function generateWorkflowCode(nodes: WorkflowNode[], edges: WorkflowEdge[
       continue;
     }
     if (actionType === 'Condition') {
-      body.push(`  if (!(${templateToExpression(node.data.config?.['condition'], varNames).replace(/^`|`$/g, '')})) {`, '    return;', '  }');
+      body.push(
+        `  if (!(${templateToExpression(node.data.config?.['condition'], varNames).replace(/^`|`$/g, '')})) {`,
+        '    return;',
+        '  }'
+      );
       continue;
     }
     const fn = stepFunctionName(node);

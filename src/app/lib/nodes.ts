@@ -68,7 +68,12 @@ export function createAddPlaceholderNode(): WorkflowNode {
   return { id: 'add-placeholder', type: 'add', position: { x: 0, y: 0 }, data: { label: '', type: 'add' } };
 }
 
-export function createEdge(source: string, target: string, sourceHandle: string | null = null, targetHandle: string | null = null): WorkflowEdge {
+export function createEdge(
+  source: string,
+  target: string,
+  sourceHandle: string | null = null,
+  targetHandle: string | null = null
+): WorkflowEdge {
   return { id: createId(), source, target, sourceHandle, targetHandle, type: 'animated' };
 }
 

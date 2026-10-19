@@ -10,7 +10,14 @@ let nextId = 0;
   host: { class: 'pointer-events-none absolute inset-0 block' },
   template: `
     <svg class="absolute inset-0 h-full w-full" aria-hidden="true">
-      <pattern [attr.id]="patternId" patternUnits="userSpaceOnUse" [attr.x]="offset().x" [attr.y]="offset().y" [attr.width]="scaledGap()" [attr.height]="scaledGap()">
+      <pattern
+        [attr.id]="patternId"
+        patternUnits="userSpaceOnUse"
+        [attr.x]="offset().x"
+        [attr.y]="offset().y"
+        [attr.width]="scaledGap()"
+        [attr.height]="scaledGap()"
+      >
         @if (variant() === 'dots') {
           <circle [attr.cx]="scaledSize() / 2" [attr.cy]="scaledSize() / 2" [attr.r]="scaledSize() / 2" [attr.fill]="color()" />
         } @else {

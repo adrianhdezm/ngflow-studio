@@ -5,7 +5,12 @@ import { EditorEmitted, EditorEvent, LoadedExecution, SavePayload, workflowEdito
 import { ValidationResult } from '../lib/validation';
 import { GraphDoc } from './editor-ops';
 
-const trigger: WorkflowNode = { id: 't', type: 'trigger', position: { x: 0, y: 0 }, data: { label: '', type: 'trigger', config: { triggerType: 'Manual' } } };
+const trigger: WorkflowNode = {
+  id: 't',
+  type: 'trigger',
+  position: { x: 0, y: 0 },
+  data: { label: '', type: 'trigger', config: { triggerType: 'Manual' } }
+};
 const action = (id: string, x = 300): WorkflowNode => ({
   id,
   type: 'action',
@@ -63,7 +68,14 @@ function start(options: { workflow?: Workflow; validation?: ValidationResult; lo
         }, 500);
         return () => clearInterval(timer);
       }),
-      loadExecution: fromPromise(async (): Promise<LoadedExecution> => ({ status: 'success', nodeStatuses: [{ nodeId: 't', status: 'success' }, { nodeId: 'a', status: 'success' }], logs: [] })),
+      loadExecution: fromPromise(async (): Promise<LoadedExecution> => ({
+        status: 'success',
+        nodeStatuses: [
+          { nodeId: 't', status: 'success' },
+          { nodeId: 'a', status: 'success' }
+        ],
+        logs: []
+      })),
       listConnections: fromPromise(async (): Promise<Connection[]> => []),
       generateWorkflow: fromCallback<EditorEvent, { prompt: string; existing: (GraphDoc & { name: string }) | null }>(({ sendBack }) => {
         harness.generate.onStart?.(sendBack);
@@ -240,7 +252,13 @@ describe('workflowEditorMachine', () => {
       actor.send({ type: 'DELETE_NODE', id: 't' });
       expect(actor.getSnapshot().context.nodes).toHaveLength(2);
 
-      actor.send({ type: 'NODES_CHANGE', changes: [{ type: 'select', id: 't', selected: true }, { type: 'select', id: 'a', selected: true }] });
+      actor.send({
+        type: 'NODES_CHANGE',
+        changes: [
+          { type: 'select', id: 't', selected: true },
+          { type: 'select', id: 'a', selected: true }
+        ]
+      });
       actor.send({ type: 'DELETE_SELECTION' });
       expect(actor.getSnapshot().context.nodes.map((n) => n.id)).toEqual(['t']);
 
@@ -289,12 +307,24 @@ describe('workflowEditorMachine', () => {
       expect(harness.emitted).toContainEqual({ type: 'panelTab', tab: 'runs' });
       expect(snapshot.context.nodes.find((n) => n.id === 't')?.data.status).toBe('running');
 
-      harness.statusQueue.push({ status: 'running', nodeStatuses: [{ nodeId: 't', status: 'success' }, { nodeId: 'a', status: 'running' }] });
+      harness.statusQueue.push({
+        status: 'running',
+        nodeStatuses: [
+          { nodeId: 't', status: 'success' },
+          { nodeId: 'a', status: 'running' }
+        ]
+      });
       await vi.advanceTimersByTimeAsync(500);
       snapshot = actor.getSnapshot();
       expect(snapshot.context.nodes.find((n) => n.id === 'a')?.data.status).toBe('running');
 
-      harness.statusQueue.push({ status: 'success', nodeStatuses: [{ nodeId: 't', status: 'success' }, { nodeId: 'a', status: 'success' }] });
+      harness.statusQueue.push({
+        status: 'success',
+        nodeStatuses: [
+          { nodeId: 't', status: 'success' },
+          { nodeId: 'a', status: 'success' }
+        ]
+      });
       await vi.advanceTimersByTimeAsync(500);
       snapshot = actor.getSnapshot();
       expect(snapshot.matches({ ready: { execution: 'idle' } })).toBe(true);
@@ -357,7 +387,13 @@ describe('workflowEditorMachine', () => {
       expect(actor.getSnapshot().context.nodes.map((n) => n.id)).toEqual(['t', 'a']);
 
       const second: WorkflowNode = { ...trigger, id: 't2' };
-      send({ type: 'GENERATION_PARTIAL', partial: { nodes: [trigger, action('a'), second, action('g', 900)], edges: [{ ...edge('a', 'g'), type: 'temporary' }, edge('t2', 'g')] } });
+      send({
+        type: 'GENERATION_PARTIAL',
+        partial: {
+          nodes: [trigger, action('a'), second, action('g', 900)],
+          edges: [{ ...edge('a', 'g'), type: 'temporary' }, edge('t2', 'g')]
+        }
+      });
       let { context } = actor.getSnapshot();
       // Single trigger enforced; the extra trigger's edges are dropped; edges forced to animated.
       expect(context.nodes.map((n) => n.id)).toEqual(['t', 'a', 'g']);

@@ -91,7 +91,10 @@ export function hitTest<T extends Rect & { id: string }>(point: XYPosition, rect
 }
 
 /** The point on a handle's outer edge where an edge attaches, in flow coordinates. */
-export function getHandleAnchor(nodePosition: XYPosition, handle: Pick<HandleBounds, 'x' | 'y' | 'width' | 'height' | 'position'>): XYPosition {
+export function getHandleAnchor(
+  nodePosition: XYPosition,
+  handle: Pick<HandleBounds, 'x' | 'y' | 'width' | 'height' | 'position'>
+): XYPosition {
   const x = nodePosition.x + handle.x;
   const y = nodePosition.y + handle.y;
   switch (handle.position) {

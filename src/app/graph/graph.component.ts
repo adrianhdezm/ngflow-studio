@@ -21,7 +21,13 @@ import { getSelectChanges, resolveConnection } from './changes';
 import { GraphController } from './graph-controller';
 import { distance, getBezierPath, getFallbackAnchor, getHandleAnchor, oppositePosition, zoomAtPoint } from './geometry';
 import { NodeWrapperComponent } from './node-wrapper.component';
-import { ConnectionLineTemplateDirective, EdgeTemplateDirective, EdgeTemplateContext, NodeTemplateContext, NodeTemplateDirective } from './templates';
+import {
+  ConnectionLineTemplateDirective,
+  EdgeTemplateDirective,
+  EdgeTemplateContext,
+  NodeTemplateContext,
+  NodeTemplateDirective
+} from './templates';
 import {
   ConnectEndEvent,
   ConnectStartEvent,
@@ -110,7 +116,7 @@ export function isTypingTarget(target: EventTarget | null): boolean {
               (click)="onEdgeClick($event, item.edge)"
               (contextmenu)="onEdgeContextMenu($event, item.edge)"
             >
-              <path [attr.d]="item.path" fill="none" stroke="transparent" stroke-width="12" style="pointer-events: stroke" />
+              <path [attr.d]="item.path" fill="none" stroke="transparent" stroke-width="12" class="[pointer-events:stroke]" />
               @if (item.template) {
                 <ng-container *ngTemplateOutlet="item.template; context: item.context" />
               } @else {
@@ -128,7 +134,11 @@ export function isTypingTarget(target: EventTarget | null): boolean {
         </svg>
 
         @for (node of controller.nodes(); track node.id) {
-          <ngf-node-wrapper [node]="node" [template]="nodeTemplateFor(node.type)" [dragPosition]="controller.dragPositions().get(node.id)" />
+          <ngf-node-wrapper
+            [node]="node"
+            [template]="nodeTemplateFor(node.type)"
+            [dragPosition]="controller.dragPositions().get(node.id)"
+          />
         }
 
         @if (connectionPreview(); as preview) {
@@ -352,8 +362,17 @@ export class GraphComponent implements GraphInternals {
     const zoom = this.controller.viewport().zoom;
     const start = { x: event.clientX, y: event.clientY };
     const canDrag = node.draggable !== false;
-    const dragIds = node.selected && !additive ? this.nodes().filter((n) => n.selected && n.draggable !== false).map((n) => n.id) : [node.id];
-    const origins = new Map(this.nodes().filter((n) => dragIds.includes(n.id)).map((n) => [n.id, n.position]));
+    const dragIds =
+      node.selected && !additive
+        ? this.nodes()
+            .filter((n) => n.selected && n.draggable !== false)
+            .map((n) => n.id)
+        : [node.id];
+    const origins = new Map(
+      this.nodes()
+        .filter((n) => dragIds.includes(n.id))
+        .map((n) => [n.id, n.position])
+    );
     let dragging = false;
     let latest = new Map<string, XYPosition>();
 
@@ -466,7 +485,12 @@ export class GraphComponent implements GraphInternals {
     const fromPosition = handle?.position ?? (handleType === 'source' ? 'right' : 'left');
     const fromPoint = handle ? getHandleAnchor(rect, handle) : getFallbackAnchor(rect, fromPosition);
     const from: ConnectStartEvent = { nodeId, handleId, handleType };
-    this.connection.set({ from, fromPoint, fromPosition, toPoint: this.controller.screenToFlowPosition({ x: event.clientX, y: event.clientY }) });
+    this.connection.set({
+      from,
+      fromPoint,
+      fromPosition,
+      toPoint: this.controller.screenToFlowPosition({ x: event.clientX, y: event.clientY })
+    });
     this.connectStart.emit(from);
 
     const move = (e: PointerEvent) => {
@@ -651,5 +675,8 @@ function sameHandles(a: HandleBounds[] | undefined, b: HandleBounds[]): boolean 
   if (!a || a.length !== b.length) {
     return false;
   }
-  return a.every((h, i) => h.id === b[i].id && h.type === b[i].type && h.x === b[i].x && h.y === b[i].y && h.width === b[i].width && h.height === b[i].height);
+  return a.every(
+    (h, i) =>
+      h.id === b[i].id && h.type === b[i].type && h.x === b[i].x && h.y === b[i].y && h.width === b[i].width && h.height === b[i].height
+  );
 }

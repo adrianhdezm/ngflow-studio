@@ -232,7 +232,9 @@ export const workflowEditorMachine = setup({
     pollExecution: fromCallback<EditorEvent, { executionId: string }>(notProvided('pollExecution')),
     loadExecution: fromPromise<LoadedExecution, { executionId: string }>(notProvided('loadExecution')),
     listConnections: fromPromise<Connection[], void>(notProvided('listConnections')),
-    generateWorkflow: fromCallback<EditorEvent, { prompt: string; existing: (GraphDoc & { name: string }) | null }>(notProvided('generateWorkflow'))
+    generateWorkflow: fromCallback<EditorEvent, { prompt: string; existing: (GraphDoc & { name: string }) | null }>(
+      notProvided('generateWorkflow')
+    )
   },
   delays: {
     autosave: 1000,
@@ -419,7 +421,10 @@ export const workflowEditorMachine = setup({
                   guard: 'canEdit',
                   actions: [
                     assign(({ context, event }) => {
-                      const base = { nodes: [...context.nodes, { ...event.node, selected: false }], edges: event.edge ? [...context.edges, event.edge] : context.edges };
+                      const base = {
+                        nodes: [...context.nodes, { ...event.node, selected: false }],
+                        edges: event.edge ? [...context.edges, event.edge] : context.edges
+                      };
                       const next = event.select === false ? base : selectOnly(base, [event.node.id]);
                       return {
                         ...withSelection(next),
@@ -604,7 +609,11 @@ export const workflowEditorMachine = setup({
                 input: ({ context }) => ({ id: context.workflowId!, name: context.name, nodes: context.nodes, edges: context.edges }),
                 onDone: [
                   // Edits made while saving need another save.
-                  { guard: ({ context }) => context.revision !== context.savingRevision, target: 'debouncing', actions: assign({ manualSave: false }) },
+                  {
+                    guard: ({ context }) => context.revision !== context.savingRevision,
+                    target: 'debouncing',
+                    actions: assign({ manualSave: false })
+                  },
                   { target: 'idle', actions: assign({ hasUnsavedChanges: false, manualSave: false }) }
                 ],
                 onError: {
@@ -789,7 +798,10 @@ export const workflowEditorMachine = setup({
                 GENERATE: {
                   guard: ({ context, event }) => context.isOwner && event.prompt.trim().length > 0,
                   target: 'generating',
-                  actions: assign(({ context }) => ({ preGeneration: snapshot(doc(context)), ...withSelection(selectOnly(doc(context), [])) }))
+                  actions: assign(({ context }) => ({
+                    preGeneration: snapshot(doc(context)),
+                    ...withSelection(selectOnly(doc(context), []))
+                  }))
                 }
               }
             },
@@ -953,7 +965,11 @@ export const workflowEditorMachine = setup({
                 },
                 onError: {
                   target: 'idle',
-                  actions: emit(({ event }) => ({ type: 'toast' as const, variant: 'error' as const, message: (event.error as Error)?.message || 'Failed to delete workflow' }))
+                  actions: emit(({ event }) => ({
+                    type: 'toast' as const,
+                    variant: 'error' as const,
+                    message: (event.error as Error)?.message || 'Failed to delete workflow'
+                  }))
                 }
               }
             },

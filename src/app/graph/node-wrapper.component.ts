@@ -43,7 +43,6 @@ import { GraphNode, HandleBounds, HandlePosition, HandleType, NGF_GRAPH, NGF_NOD
     '[style.transform]': 'transform()',
     '[style.z-index]': 'dragging() ? 1000 : node().selected ? 10 : 1',
     '[class.cursor-grab]': 'canDrag()',
-    '[class.pointer-events-none]': 'node().selectable === false && node().draggable === false',
     '(pointerdown)': 'onPointerDown($event)',
     '(contextmenu)': 'graph.onNodeContextMenu($event, node())',
     '(keydown)': 'graph.onNodeKeydown($event, node())'

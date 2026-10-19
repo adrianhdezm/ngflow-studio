@@ -14,9 +14,24 @@ import { PANEL_POSITION_CLASSES, PanelPosition } from './panel.component';
     '(contextmenu)': '$event.stopPropagation()'
   },
   template: `
-    <svg [attr.width]="width()" [attr.height]="height()" [attr.viewBox]="viewBox()" class="block cursor-pointer" role="img" aria-label="Minimap">
+    <svg
+      [attr.width]="width()"
+      [attr.height]="height()"
+      [attr.viewBox]="viewBox()"
+      class="block cursor-pointer"
+      role="img"
+      aria-label="Minimap"
+    >
       @for (rect of controller.nodeRects(); track rect.id) {
-        <rect [attr.x]="rect.x" [attr.y]="rect.y" [attr.width]="rect.width" [attr.height]="rect.height" rx="6" class="fill-card stroke-border" [attr.stroke-width]="strokeWidth()" />
+        <rect
+          [attr.x]="rect.x"
+          [attr.y]="rect.y"
+          [attr.width]="rect.width"
+          [attr.height]="rect.height"
+          rx="6"
+          class="fill-card stroke-border"
+          [attr.stroke-width]="strokeWidth()"
+        />
       }
       <rect
         [attr.x]="visible().x"
@@ -35,7 +50,9 @@ export class MinimapComponent {
   readonly height = input(150);
 
   protected readonly controller = inject(GraphController);
-  protected readonly classes = computed(() => `absolute z-20 block overflow-hidden rounded-md border bg-sidebar ${PANEL_POSITION_CLASSES[this.position()]}`);
+  protected readonly classes = computed(
+    () => `absolute z-20 block overflow-hidden rounded-md border bg-sidebar ${PANEL_POSITION_CLASSES[this.position()]}`
+  );
   protected readonly visible = computed(() => getVisibleFlowRect(this.controller.viewport(), this.controller.size()));
 
   private readonly frame = computed(() => {
@@ -44,7 +61,12 @@ export class MinimapComponent {
     const w = this.width() * scale;
     const h = this.height() * scale;
     const pad = 10 * scale;
-    return { x: bounds.x - (w - bounds.width) / 2 - pad, y: bounds.y - (h - bounds.height) / 2 - pad, width: w + pad * 2, height: h + pad * 2 };
+    return {
+      x: bounds.x - (w - bounds.width) / 2 - pad,
+      y: bounds.y - (h - bounds.height) / 2 - pad,
+      width: w + pad * 2,
+      height: h + pad * 2
+    };
   });
   protected readonly viewBox = computed(() => {
     const f = this.frame();
