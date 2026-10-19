@@ -120,7 +120,10 @@ export async function runStep(node: WorkflowNode, resolvedConfig: Record<string,
       if (resolvedConfig['format'] === 'object') {
         const schema = parseJson(resolvedConfig['schema'], []) as { name: string; type: string }[];
         const object = Object.fromEntries(
-          (Array.isArray(schema) ? schema : []).map((f) => [f.name, f.type === 'number' ? 42 : f.type === 'boolean' ? true : `Sample ${f.name}`])
+          (Array.isArray(schema) ? schema : []).map((f) => [
+            f.name,
+            f.type === 'number' ? 42 : f.type === 'boolean' ? true : `Sample ${f.name}`
+          ])
         );
         return { object, text: JSON.stringify(object) };
       }

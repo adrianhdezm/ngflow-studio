@@ -132,7 +132,12 @@ export class MockWorkflowService implements WorkflowService {
       id: idMap.get(n.id)!,
       data: { ...n.data, config: JSON.parse(remap(JSON.stringify(n.data.config ?? {}))) }
     }));
-    const edges = source.edges.map((e) => ({ ...e, id: createId(), source: idMap.get(e.source) ?? e.source, target: idMap.get(e.target) ?? e.target }));
+    const edges = source.edges.map((e) => ({
+      ...e,
+      id: createId(),
+      source: idMap.get(e.source) ?? e.source,
+      target: idMap.get(e.target) ?? e.target
+    }));
     return this.create({ name: `${source.name} (Copy)`, nodes, edges });
   }
 

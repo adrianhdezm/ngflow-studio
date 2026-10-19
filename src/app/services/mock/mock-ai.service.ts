@@ -18,7 +18,13 @@ function action(id: string, x: number, y: number, spec: StepSpec, prev: Workflow
     id,
     type: 'action',
     position: { x, y },
-    data: { label: spec.label, description: '', type: 'action', enabled: true, config: { actionType: spec.actionType, ...spec.config(prev) } }
+    data: {
+      label: spec.label,
+      description: '',
+      type: 'action',
+      enabled: true,
+      config: { actionType: spec.actionType, ...spec.config(prev) }
+    }
   };
 }
 
@@ -34,7 +40,11 @@ function planSteps(prompt: string): StepSpec[] {
     });
   }
   if (/database|sql|query|users/.test(p)) {
-    steps.push({ label: 'Query Users', actionType: 'Database Query', config: () => ({ dbQuery: 'SELECT id, name, email FROM users LIMIT 10;' }) });
+    steps.push({
+      label: 'Query Users',
+      actionType: 'Database Query',
+      config: () => ({ dbQuery: 'SELECT id, name, email FROM users LIMIT 10;' })
+    });
   }
   if (/image|picture|photo|illustrat/.test(p)) {
     steps.push({ label: 'Create Image', actionType: 'ai/generate-image', config: () => ({ model: 'imagen-fast', prompt }) });
@@ -42,7 +52,11 @@ function planSteps(prompt: string): StepSpec[] {
     steps.push({
       label: 'Summarize',
       actionType: 'ai/generate-text',
-      config: (prev) => ({ model: 'claude-sonnet', format: 'text', prompt: `Summarize this: ${formatReference(prev.id, prev.data.label || 'Manual')}` })
+      config: (prev) => ({
+        model: 'claude-sonnet',
+        format: 'text',
+        prompt: `Summarize this: ${formatReference(prev.id, prev.data.label || 'Manual')}`
+      })
     });
   }
   if (/if|only when|condition|check/.test(p)) {
@@ -52,7 +66,11 @@ function planSteps(prompt: string): StepSpec[] {
     steps.push({
       label: 'Send Email',
       actionType: 'resend/send-email',
-      config: (prev) => ({ emailTo: 'team@example.com', emailSubject: 'Workflow update', emailBody: formatReference(prev.id, prev.data.label) })
+      config: (prev) => ({
+        emailTo: 'team@example.com',
+        emailSubject: 'Workflow update',
+        emailBody: formatReference(prev.id, prev.data.label)
+      })
     });
   }
   if (/slack|notify|message|post/.test(p) || !/email|mail/.test(p)) {
